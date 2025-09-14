@@ -2,8 +2,9 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_REPO_NAME: employee-service   # 👈 change in Department repo
-    AWS_DEFAULT_REGION: us-east-1       # 👈 replace with your AWS region
+    IMAGE_REPO_NAME: employee-service
+    AWS_DEFAULT_REGION: us-east-1
+    AWS_ACCOUNT_ID: 982081085979   # your AWS account ID
 phases:
   pre_build:
     commands:
@@ -25,7 +26,7 @@ phases:
       - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:latest
       - echo Writing imagedefinitions.json file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' "container-name-inside-taskdef" "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG" > imagedefinitions.json
+      - printf '[{"name":"employee-container","imageUri":"%s"}]' "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG" > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json

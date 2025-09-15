@@ -6,7 +6,10 @@ WORKDIR /app
 COPY mvnw .
 COPY pom.xml .
 
-# Install Maven (since mvnw needs it)
+# Make mvnw executable
+RUN chmod +x mvnw
+
+# Install Maven (for mvnw to work if needed)
 RUN yum install -y maven
 
 # Copy source and build JAR

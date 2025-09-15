@@ -1,19 +1,28 @@
-# Stage 1: Build the Spring Boot app
-FROM public.ecr.aws/amazoncorretto/amazoncorretto:17 AS build
+# -------------------------
+# Stage 1: Build the JAR
+# -------------------------
+FROM maven:3.9.6-amazoncorretto-17 AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY mvnw .
+# Copy pom.xml and download dependencies first (better caching)
 COPY pom.xml .
-RUN chmod +x mvnw
+RUN mvn dependency:go-offline -B
 
-# Copy source and build JAR
+# Copy source code and build
 COPY src ./src
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
-# Stage 2: Run the app
-FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-alpine
+# -------------------------
+# Stage 2: Run the JAR
+# -------------------------
+FROM public.ecr.aws/amazoncorretto/amazoncorretto:17
 WORKDIR /app
+
+# Copy the built jar from stage 1
 COPY --from=build /app/target/*.jar app.jar
 
-ENTRYPOINT ["java","-jar","app.jar"]
+# Expose application port
+EXPOSE 8080
+
+# Run the app
+ENTRYPOINT ["java", "-jar", "app.jar"]

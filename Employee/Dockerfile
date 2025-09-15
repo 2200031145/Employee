@@ -1,7 +1,7 @@
 # -------------------------
 # Stage 1: Build the JAR
 # -------------------------
-FROM maven:3.9.6-amazoncorretto-17 AS build
+FROM public.ecr.aws/docker/library/maven:3.9.6-amazoncorretto-17 AS build
 WORKDIR /app
 
 # Copy pom.xml first to leverage Docker cache

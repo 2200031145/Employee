@@ -2,13 +2,12 @@
 FROM amazoncorretto:17 AS build
 WORKDIR /app
 
-# Copy Maven wrapper & pom first (for dependency caching)
+# Copy Maven wrapper script and pom.xml
 COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
 
-# Download dependencies
-RUN ./mvnw dependency:go-offline -B
+# Install Maven (since mvnw needs it)
+RUN yum install -y maven
 
 # Copy source and build JAR
 COPY src ./src

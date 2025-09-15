@@ -4,7 +4,7 @@ env:
   variables:
     IMAGE_REPO_NAME: employee-service
     AWS_DEFAULT_REGION: us-east-1
-    AWS_ACCOUNT_ID: 982081085979   # your AWS account ID
+    AWS_ACCOUNT_ID: 982081085979
 
 phases:
   pre_build:
@@ -16,6 +16,8 @@ phases:
 
   build:
     commands:
+      - echo Moving into Employee service folder...
+      - cd Employee
       - echo Building Spring Boot JAR...
       - mvn clean package -DskipTests
       - echo Building Docker image...
